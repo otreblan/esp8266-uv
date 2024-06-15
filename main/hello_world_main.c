@@ -12,6 +12,7 @@
 #include "esp_system.h"
 #include "esp_spi_flash.h"
 
+#include "driver/gpio.h"
 
 void app_main()
 {
@@ -28,11 +29,30 @@ void app_main()
     printf("%dMB %s flash\n", (int)spi_flash_get_chip_size() / (1024 * 1024),
             (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
 
-    for (int i = 10; i >= 0; i--) {
-        printf("Restarting in %d seconds...\n", i);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
-    printf("Restarting now.\n");
-    fflush(stdout);
-    esp_restart();
+
+	gpio_num_t GPIO_LED = GPIO_NUM_16;
+
+
+	gpio_config_t io_config =
+	{
+		.intr_type    = GPIO_INTR_DISABLE,
+		.pull_down_en = 0,
+		.pull_up_en   = 0,
+
+		.pin_bit_mask = 1ULL << GPIO_LED,
+		.mode         = GPIO_MODE_OUTPUT
+	};
+
+
+	gpio_config(&io_config);
+
+	int delay = 1000/portTICK_PERIOD_MS;
+
+	while(true)
+	{
+		gpio_set_level(GPIO_LED, 1);
+		vTaskDelay(delay);
+		gpio_set_level(GPIO_LED, 0);
+		vTaskDelay(delay);
+	}
 }
