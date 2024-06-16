@@ -11,9 +11,16 @@ void cpp_main()
 	ESP_ERROR_CHECK(nvs_flash_init());
 
 	uv::wifi        wifi("", "");
-	uv::mqtt_client mqtt_client("http://10.42.0.1:1883");
+	uv::mqtt_client mqtt_client("mqtt://10.42.0.1:1883");
 
-	mqtt_client.start();
+	if(mqtt_client.start())
+	{
+		while(true)
+		{
+			UV_LOGI("Publish");
+			mqtt_client.publish("/hello_world", nullptr, 0, 1);
+		}
+	}
 }
 
 extern "C" {

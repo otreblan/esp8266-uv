@@ -66,10 +66,9 @@ void wifi::ip_handler(int32_t event_id, void* event_data)
 }
 
 wifi::wifi(const std::string& ssid, const std::string& password, int max_retries):
+	event_group(xEventGroupCreate()),
 	max_retries(max_retries)
 {
-	event_group = xEventGroupCreate();
-
 	tcpip_adapter_init();
 
 	ESP_ERROR_CHECK(esp_event_loop_create_default());
