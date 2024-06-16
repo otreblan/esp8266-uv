@@ -7,6 +7,7 @@ extern "C" {
 #endif
 
 #define UV_LOGI(format, ... ) ESP_LOGI("uv", format, ##__VA_ARGS__)
+#define UV_LOGE(format, ... ) ESP_LOGE("uv", format, ##__VA_ARGS__)
 
 void log_chip_info();
 

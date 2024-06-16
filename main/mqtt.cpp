@@ -32,8 +32,8 @@ mqtt_client::~mqtt_client()
 
 void mqtt_client::start()
 {
-	esp_mqtt_client_register_event(client, (esp_mqtt_event_id_t)ESP_EVENT_ANY_ID, event_handler, this);
-	esp_mqtt_client_start(client);
+	ESP_ERROR_CHECK(esp_mqtt_client_register_event(client, (esp_mqtt_event_id_t)ESP_EVENT_ANY_ID, event_handler, this));
+	ESP_ERROR_CHECK(esp_mqtt_client_start(client));
 }
 
 }
