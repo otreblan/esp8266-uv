@@ -1,3 +1,5 @@
+#include <cstdio>
+#include <vector>
 #include "driver/adc.h"
 #include "driver/gpio.h"
 #include "nvs_flash.h"
@@ -48,19 +50,31 @@ void cpp_main()
 
 	if(mqtt_client.start())
 	{
+		std::vector<char> buffer(4096);
+		size_t offset = 0;
+
 		while(true)
 		{
-			UV_LOGI("Publish");
-
 			uint16_t data;
 			ESP_ERROR_CHECK(adc_read(&data));
-			UV_LOGI("Analog input: %d", data);
 
-			std::string publish_data = std::to_string(data);
+			size_t remaining_space = buffer.size()-offset;
+			int n = snprintf(buffer.data()+offset, remaining_space, "%d\n", data);
 
-			gpio_set_level(GPIO_LED, 1);
-			mqtt_client.publish("/hello_world", publish_data.c_str(), publish_data.size(), 1);
-			gpio_set_level(GPIO_LED, 0);
+			if(n >= remaining_space)
+			{
+				UV_LOGI("Publish");
+
+				gpio_set_level(GPIO_LED, 1);
+				mqtt_client.publish("/hello_world", buffer.data(), offset, 0);
+				gpio_set_level(GPIO_LED, 0);
+
+				offset = snprintf(buffer.data(), buffer.size(), "%d\n", data);
+			}
+			else
+			{
+				offset += n;
+			}
 		}
 	}
 }
