@@ -1,0 +1,15 @@
+#pragma once
+
+#include "esp_log.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define UV_LOGI(format, ... ) ESP_LOGI("uv", format, ##__VA_ARGS__)
+
+void log_chip_info();
+
+#ifdef __cplusplus
+}
+#endif
