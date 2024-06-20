@@ -1,0 +1,36 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ '*' ]
+  pull_request:
+    branches: [ '*' ]
+
+jobs:
+  ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ammaraskar/gcc-problem-matcher@master
+
+    - uses: actions/checkout@v4
+      with:
+        repository: espressif/ESP8266_RTOS_SDK
+        submodules: 'yes'
+        path: idf
+
+    - run: chmod -R 777 idf
+
+    - name: deps
+      run: sudo apt install gcc-xtensa-lx106 esptool
+
+    - name: configure
+      run: |
+          export IDF_PATH=./idf
+          cmake -B build
+
+    - name: build
+      run: |
+          export MAKEFLAGS=-j$(nproc)
+          cmake --build build
