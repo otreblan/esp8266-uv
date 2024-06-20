@@ -1,12 +1,11 @@
-# Hello World Example
+# esp8266 uv sensor
 
-Starts a FreeRTOS task to print "Hello World"
-
-See the README.md file in the upper level 'examples' directory for more information about examples.
+https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/get-started/linux-setup.html
 
 ## Dependencies
 
 * `esp8266-rtos-sdk`
+* `esptool`
 * `xtensa-lx106-elf-gcc-bin`
 
 ## Build
