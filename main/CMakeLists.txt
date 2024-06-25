@@ -1,5 +1,6 @@
 idf_component_register(
 	SRCS
+		e_ink.cpp
 		mqtt.cpp
 		utils.c
 		uv_main.cpp

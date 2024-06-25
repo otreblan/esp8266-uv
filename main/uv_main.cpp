@@ -7,6 +7,7 @@
 #include "mqtt.hpp"
 #include "utils.h"
 #include "wifi.hpp"
+#include "e_ink.hpp"
 
 gpio_num_t GPIO_LED = GPIO_NUM_16;
 
@@ -47,6 +48,7 @@ void cpp_main()
 
 	uv::wifi        wifi("", "");
 	uv::mqtt_client mqtt_client("mqtt://10.42.0.1:1883");
+	uv::e_ink       e_ink;
 
 	if(mqtt_client.start())
 	{
