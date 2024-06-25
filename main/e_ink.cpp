@@ -21,16 +21,26 @@ e_ink::e_ink(gpio_num_t BUSY_PIN, gpio_num_t RST_PIN, gpio_num_t DC_PIN, gpio_nu
 
 void e_ink::init_spi()
 {
-	gpio_config_t rst_dc_config = {
-		.pin_bit_mask = (1U << RST_PIN) | (1U << DC_PIN),
+	gpio_config_t output_config = {
+		.pin_bit_mask = (1U << RST_PIN) | (1U << DC_PIN) | (1U << CS_PIN),
 		.mode         = GPIO_MODE_OUTPUT,
 
-		.pull_up_en   = GPIO_PULLUP_DISABLE,
+		.pull_up_en   = GPIO_PULLUP_ENABLE,
 		.pull_down_en = GPIO_PULLDOWN_DISABLE,
 		.intr_type    = GPIO_INTR_DISABLE
 	};
 
-	gpio_config(&rst_dc_config);
+	gpio_config_t input_config = {
+		.pin_bit_mask = (1U << BUSY_PIN),
+		.mode         = GPIO_MODE_INPUT,
+
+		.pull_up_en   = GPIO_PULLUP_ENABLE,
+		.pull_down_en = GPIO_PULLDOWN_ENABLE,
+		.intr_type    = GPIO_INTR_ANYEDGE
+	};
+
+	gpio_config(&output_config);
+	gpio_config(&input_config);
 
 	spi_config_t spi_config = {
 		//TODO
