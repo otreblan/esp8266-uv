@@ -23,6 +23,9 @@ private:
 	void init_gpio();
 	void init_spi();
 
+	void reset_screen();
+	void busy_spinlock();
+
 	static void isr_busy_handler(void* arg);
 	void isr_busy_handler();
 

@@ -1,4 +1,5 @@
 #include "e_ink.hpp"
+#include "utils.h"
 
 namespace uv
 {
@@ -23,6 +24,9 @@ void e_ink::init()
 {
 	init_gpio();
 	init_spi();
+
+	reset_screen();
+	busy_spinlock();
 }
 
 void e_ink::init_gpio()
@@ -72,6 +76,20 @@ void e_ink::init_spi()
 	spi_config.interface.bit_tx_order  = SPI_BIT_ORDER_LSB_FIRST;
 
 	spi_init(HSPI_HOST, &spi_config);
+}
+
+void e_ink::reset_screen()
+{
+	gpio_set_level(RST_PIN, 0);
+	delay_ms(10);
+	gpio_set_level(RST_PIN, 1);
+	delay_ms(200);
+}
+
+void e_ink::busy_spinlock()
+{
+	while(is_busy());
+	delay_ms(100);
 }
 
 void e_ink::isr_busy_handler(void* arg)
