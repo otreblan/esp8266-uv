@@ -5,7 +5,7 @@ namespace uv
 
 e_ink::e_ink()
 {
-	init_spi();
+	init();
 }
 
 e_ink::e_ink(gpio_num_t BUSY_PIN, gpio_num_t RST_PIN, gpio_num_t DC_PIN, gpio_num_t SCK_PIN, gpio_num_t MOSI_PIN, gpio_num_t CS_PIN):
@@ -16,10 +16,16 @@ e_ink::e_ink(gpio_num_t BUSY_PIN, gpio_num_t RST_PIN, gpio_num_t DC_PIN, gpio_nu
 	MOSI_PIN(MOSI_PIN),
 	CS_PIN(CS_PIN)
 {
+	init();
+}
+
+void e_ink::init()
+{
+	init_gpio();
 	init_spi();
 }
 
-void e_ink::init_spi()
+void e_ink::init_gpio()
 {
 	gpio_config_t output_config = {
 		.pin_bit_mask = (1U << RST_PIN) | (1U << DC_PIN) | (1U << CS_PIN),
@@ -42,9 +48,28 @@ void e_ink::init_spi()
 	gpio_config(&output_config);
 	gpio_config(&input_config);
 
+}
+
+void e_ink::init_spi()
+{
 	spi_config_t spi_config = {
-		//TODO
+		.interface   = {.val = SPI_DEFAULT_INTERFACE},
+		.intr_enable = {},
+		.mode = SPI_MASTER_MODE,
+		.clk_div = SPI_2MHz_DIV,
 	};
+
+	spi_config.interface.mosi_en = 1;
+	spi_config.interface.cs_en   = 0;
+	spi_config.interface.miso_en = 0;
+
+	spi_config.interface.cpol = SPI_CPOL_HIGH;
+	spi_config.interface.cpha = SPI_CPHA_HIGH;
+
+	spi_config.interface.byte_tx_order = SPI_BYTE_ORDER_MSB_FIRST;
+	spi_config.interface.bit_tx_order  = SPI_BIT_ORDER_LSB_FIRST;
+
+	spi_init(HSPI_HOST, &spi_config);
 }
 
 e_ink::~e_ink()

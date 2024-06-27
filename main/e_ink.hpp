@@ -19,7 +19,11 @@ private:
 	const gpio_num_t MOSI_PIN = GPIO_NUM_13;
 	const gpio_num_t CS_PIN   = GPIO_NUM_15;
 
+	void init();
+	void init_gpio();
 	void init_spi();
+
+	spi_trans_t spi_trans_st = {};
 
 public:
 	e_ink();
