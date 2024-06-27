@@ -25,8 +25,9 @@ void e_ink::init()
 	init_gpio();
 	init_spi();
 
-	reset_screen();
+	hw_reset();
 	busy_spinlock();
+	sw_reset();
 }
 
 void e_ink::init_gpio()
@@ -61,8 +62,9 @@ void e_ink::init_spi()
 	spi_config_t spi_config = {
 		.interface   = {.val = SPI_DEFAULT_INTERFACE},
 		.intr_enable = {},
-		.mode = SPI_MASTER_MODE,
-		.clk_div = SPI_2MHz_DIV,
+		.event_cb    = nullptr,
+		.mode        = SPI_MASTER_MODE,
+		.clk_div     = SPI_2MHz_DIV,
 	};
 
 	spi_config.interface.mosi_en = 1;
@@ -78,7 +80,7 @@ void e_ink::init_spi()
 	spi_init(HSPI_HOST, &spi_config);
 }
 
-void e_ink::reset_screen()
+void e_ink::hw_reset()
 {
 	gpio_set_level(RST_PIN, 0);
 	delay_ms(10);
@@ -86,10 +88,40 @@ void e_ink::reset_screen()
 	delay_ms(200);
 }
 
+void e_ink::sw_reset()
+{
+	send_cmd(0x12);
+	delay_ms(10);
+}
+
 void e_ink::busy_spinlock()
 {
 	while(is_busy());
 	delay_ms(100);
+}
+
+void e_ink::send_cmd(uint8_t cmd)
+{
+	gpio_set_level(DC_PIN, 0);
+	send_byte(cmd);
+}
+
+void e_ink::send_data(uint8_t data)
+{
+	gpio_set_level(DC_PIN, 1);
+	send_byte(data);
+}
+
+void e_ink::send_byte(uint8_t b)
+{
+	gpio_set_level(CS_PIN, 0);
+
+	uint32_t buffer   = (uint32_t) b << 24;
+	spi_trans_st.mosi = &buffer;
+
+	spi_trans(HSPI_HOST, &spi_trans_st);
+
+	gpio_set_level(CS_PIN, 1);
 }
 
 void e_ink::isr_busy_handler(void* arg)

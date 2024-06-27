@@ -23,8 +23,13 @@ private:
 	void init_gpio();
 	void init_spi();
 
-	void reset_screen();
+	void hw_reset();
+	void sw_reset();
 	void busy_spinlock();
+
+	void send_cmd(uint8_t cmd);
+	void send_data(uint8_t data);
+	void send_byte(uint8_t b);
 
 	static void isr_busy_handler(void* arg);
 	void isr_busy_handler();
