@@ -12,7 +12,7 @@ class e_ink
 {
 private:
 	const gpio_num_t BUSY_PIN = GPIO_NUM_5;
-	const gpio_num_t RST_PIN  = GPIO_NUM_2;
+	const gpio_num_t RST_PIN  = GPIO_NUM_0;
 	const gpio_num_t DC_PIN   = GPIO_NUM_4;
 
 	const gpio_num_t SCK_PIN  = GPIO_NUM_14;

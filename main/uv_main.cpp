@@ -9,7 +9,7 @@
 #include "wifi.hpp"
 #include "e_ink.hpp"
 
-gpio_num_t GPIO_LED = GPIO_NUM_16;
+gpio_num_t GPIO_LED = GPIO_NUM_2;
 
 void start_gpios()
 {
