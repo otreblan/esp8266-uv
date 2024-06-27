@@ -48,6 +48,8 @@ void e_ink::init_gpio()
 	gpio_config(&output_config);
 	gpio_config(&input_config);
 
+	ESP_ERROR_CHECK(gpio_install_isr_service(0));
+	ESP_ERROR_CHECK(gpio_isr_handler_add(BUSY_PIN, isr_busy_handler, this));
 }
 
 void e_ink::init_spi()
@@ -72,8 +74,23 @@ void e_ink::init_spi()
 	spi_init(HSPI_HOST, &spi_config);
 }
 
+void e_ink::isr_busy_handler(void* arg)
+{
+	((e_ink*)arg)->isr_busy_handler();
+}
+
+void e_ink::isr_busy_handler()
+{
+	busy = gpio_get_level(BUSY_PIN);
+}
+
 e_ink::~e_ink()
 {
+}
+
+bool e_ink::is_busy() const
+{
+	return busy;
 }
 
 }

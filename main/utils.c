@@ -1,3 +1,6 @@
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 #include "esp_system.h"
 #include "esp_spi_flash.h"
 
@@ -15,4 +18,9 @@ void log_chip_info()
 	UV_LOGI("silicon revision %d, ", chip_info.revision);
 	UV_LOGI("%dMB %s flash\n", (int)spi_flash_get_chip_size() / (1024 * 1024),
 		(chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
+}
+
+void delay_ms(uint32_t ms)
+{
+	vTaskDelay(ms/portTICK_RATE_MS);
 }

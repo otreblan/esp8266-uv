@@ -23,13 +23,19 @@ private:
 	void init_gpio();
 	void init_spi();
 
+	static void isr_busy_handler(void* arg);
+	void isr_busy_handler();
+
 	spi_trans_t spi_trans_st = {};
+	bool busy                = false;
 
 public:
 	e_ink();
 	e_ink(gpio_num_t BUSY_PIN, gpio_num_t RST_PIN, gpio_num_t DC_PIN, gpio_num_t SCK_PIN, gpio_num_t MOSI_PIN, gpio_num_t CS_PIN);
 
 	~e_ink();
+
+	bool is_busy() const;
 };
 
 }

@@ -10,6 +10,7 @@ extern "C" {
 #define UV_LOGE(format, ... ) ESP_LOGE("uv", format, ##__VA_ARGS__)
 
 void log_chip_info();
+void delay_ms(uint32_t ms);
 
 #ifdef __cplusplus
 }
