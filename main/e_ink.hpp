@@ -15,6 +15,11 @@ namespace uv
 class e_ink
 {
 private:
+	// A black (or red) pixel.
+	static constexpr uint8_t BLACK = 0;
+
+	// A white pixel.
+	static constexpr uint8_t WHITE = 1;
 
 	enum class command: uint8_t
 	{
@@ -126,6 +131,9 @@ public:
 	~e_ink();
 
 	bool is_busy() const;
+	void screen_clear();
+	void screen_inverse();
+	void screen_update();
 
 	void driver_output_control();
 	void gate_driving_voltage_control();

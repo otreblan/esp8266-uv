@@ -178,6 +178,40 @@ bool e_ink::is_busy() const
 	return busy;
 }
 
+void e_ink::screen_clear()
+{
+	std::fill(buffer.begin(), buffer.end(), 0xFF);
+}
+
+void e_ink::screen_inverse()
+{
+	for(auto& pixel_8: buffer)
+		pixel_8 = ~pixel_8;
+}
+
+void e_ink::screen_update()
+{
+	send_cmd(command::SET_RAM_X_ADDRESS_COUNTER, 0);
+	busy_spinlock();
+
+	send_cmd(command::SET_RAM_Y_ADDRESS_COUNTER, 0, 0);
+	busy_spinlock();
+
+	send_cmd(command::WRITE_RAM_BW);
+	for(int j = 0; j < buffer_height; j++)
+	{
+		for(int i = 0; i < buffer_width; i++)
+		{
+			send_data(buffer.at(j*buffer_width+i));
+		}
+	}
+	busy_spinlock();
+
+	send_cmd(command::DISPLAY_UPDATE_CONTROL_2, 0xF7);
+	send_cmd(command::MASTER_ACTIVATION);
+	busy_spinlock();
+}
+
 void e_ink::driver_output_control()
 {
 }
