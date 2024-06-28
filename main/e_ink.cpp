@@ -73,8 +73,8 @@ void e_ink::init_gpio()
 		.pin_bit_mask = (1U << BUSY_PIN),
 		.mode         = GPIO_MODE_INPUT,
 
-		.pull_up_en   = GPIO_PULLUP_ENABLE,
-		.pull_down_en = GPIO_PULLDOWN_ENABLE,
+		.pull_up_en   = GPIO_PULLUP_DISABLE,
+		.pull_down_en = GPIO_PULLDOWN_DISABLE,
 		.intr_type    = GPIO_INTR_ANYEDGE
 	};
 
@@ -136,6 +136,7 @@ void e_ink::busy_spinlock()
 
 void e_ink::send_cmd(command cmd)
 {
+	UV_LOGI("CMD: 0x%x, busy:%d",(int)cmd, (int)busy);
 	gpio_set_level(DC_PIN, 0);
 	send_byte((std::underlying_type<command>::type)cmd);
 }
@@ -166,6 +167,7 @@ void e_ink::isr_busy_handler(void* arg)
 void e_ink::isr_busy_handler()
 {
 	busy = gpio_get_level(BUSY_PIN);
+	ets_printf("Busy: %d\n", (int)busy);
 }
 
 e_ink::~e_ink()
