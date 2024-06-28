@@ -1,3 +1,5 @@
+#include <type_traits>
+
 #include "e_ink.hpp"
 #include "utils.h"
 
@@ -95,7 +97,7 @@ void e_ink::hw_reset()
 
 void e_ink::sw_reset()
 {
-	send_cmd(0x12);
+	send_cmd(command::SW_RESET);
 	delay_ms(10);
 }
 
@@ -105,10 +107,10 @@ void e_ink::busy_spinlock()
 		delay_ms(10);
 }
 
-void e_ink::send_cmd(uint8_t cmd)
+void e_ink::send_cmd(command cmd)
 {
 	gpio_set_level(DC_PIN, 0);
-	send_byte(cmd);
+	send_byte((std::underlying_type<command>::type)cmd);
 }
 
 void e_ink::send_data(uint8_t data)
