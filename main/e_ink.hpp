@@ -107,8 +107,8 @@ private:
 	static void isr_busy_handler(void* arg);
 	void isr_busy_handler();
 
-	spi_trans_t spi_trans_st = {};
-	bool busy                = false;
+	spi_trans_t trans = {};
+	bool busy         = false;
 
 public:
 	e_ink();

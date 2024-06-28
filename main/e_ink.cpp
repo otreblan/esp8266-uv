@@ -83,6 +83,8 @@ void e_ink::init_spi()
 	spi_config.interface.bit_tx_order  = SPI_BIT_ORDER_LSB_FIRST;
 
 	spi_init(HSPI_HOST, &spi_config);
+
+	trans.bits.mosi = 8;
 }
 
 void e_ink::hw_reset()
@@ -124,9 +126,9 @@ void e_ink::send_byte(uint8_t b)
 	gpio_set_level(CS_PIN, 0);
 
 	uint32_t buffer   = (uint32_t) b << 24;
-	spi_trans_st.mosi = &buffer;
+	trans.mosi = &buffer;
 
-	spi_trans(HSPI_HOST, &spi_trans_st);
+	spi_trans(HSPI_HOST, &trans);
 
 	gpio_set_level(CS_PIN, 1);
 }
