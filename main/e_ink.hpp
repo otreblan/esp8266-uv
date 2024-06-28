@@ -27,6 +27,21 @@ private:
 	void sw_reset();
 	void busy_spinlock();
 
+
+	template<class... Ts>
+	void send_cmd(uint8_t cmd, Ts... args)
+	{
+		send_cmd(cmd);
+		send_data(args...);
+	}
+
+	template<class... Ts>
+	void send_data(uint8_t data0, Ts... data)
+	{
+		send_data(data0);
+		send_data(data...);
+	}
+
 	void send_cmd(uint8_t cmd);
 	void send_data(uint8_t data);
 	void send_byte(uint8_t b);
