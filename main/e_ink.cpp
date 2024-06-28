@@ -35,8 +35,8 @@ void e_ink::init()
 
 	send_cmd(command::DRIVER_OUTPUT_CONTROL,     0xF9, 0x00, 0x00);
 	send_cmd(command::DATA_ENTRY_MODE_SETTING,   0x03);
-	send_cmd(command::SET_RAM_X_ADDRESS,         0x00, 0x0F);
-	send_cmd(command::SET_RAM_Y_ADDRESS,         0x00, 0x00, 0x00, 0xF9);
+	send_cmd(command::SET_RAM_X_ADDRESS,         0x00, buffer_width-1);
+	send_cmd(command::SET_RAM_Y_ADDRESS,         0x00, 0x00, (buffer_height-1)>>8, (buffer_height-1));
 	send_cmd(command::SET_RAM_X_ADDRESS_COUNTER, 0x00);
 	send_cmd(command::SET_RAM_Y_ADDRESS_COUNTER, 0x00, 0x00);
 	send_cmd(command::BORDER_WAVEFORM_CONTROL,   0x05);
