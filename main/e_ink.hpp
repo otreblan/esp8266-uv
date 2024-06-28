@@ -6,8 +6,10 @@
 namespace uv
 {
 
-/// Controls an e-ink display with spi.
+/// Controls an 2.13 in V4 e-ink display with spi.
 /// https://www.waveshare.com/wiki/E-Paper_ESP8266_Driver_Board
+///
+/// Specification: https://www.waveshare.com/wiki/2.13inch_e-Paper_HAT_Manual#Resources
 class e_ink
 {
 private:

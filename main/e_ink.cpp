@@ -28,6 +28,9 @@ void e_ink::init()
 	hw_reset();
 	busy_spinlock();
 	sw_reset();
+	busy_spinlock();
+
+
 }
 
 void e_ink::init_gpio()
@@ -82,10 +85,12 @@ void e_ink::init_spi()
 
 void e_ink::hw_reset()
 {
-	gpio_set_level(RST_PIN, 0);
-	delay_ms(10);
 	gpio_set_level(RST_PIN, 1);
-	delay_ms(200);
+	delay_ms(50);
+	gpio_set_level(RST_PIN, 0);
+	delay_ms(5);
+	gpio_set_level(RST_PIN, 1);
+	delay_ms(50);
 }
 
 void e_ink::sw_reset()
@@ -96,8 +101,8 @@ void e_ink::sw_reset()
 
 void e_ink::busy_spinlock()
 {
-	while(is_busy());
-	delay_ms(100);
+	while(is_busy())
+		delay_ms(10);
 }
 
 void e_ink::send_cmd(uint8_t cmd)
