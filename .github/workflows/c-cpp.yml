@@ -15,6 +15,7 @@ jobs:
     - uses: ammaraskar/gcc-problem-matcher@master
 
     - run: echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
+    - run: cp sdkconfig.defaults sdkconfig
 
     - name: build
       uses: nsfilho/esp8266-rtos-sdk@v2
