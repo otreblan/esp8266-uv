@@ -9,15 +9,16 @@ on:
 jobs:
   ubuntu:
     runs-on: ubuntu-latest
+    container: mbenabda/esp8266-rtos-sdk:latest
 
     steps:
     - uses: actions/checkout@v4
     - uses: ammaraskar/gcc-problem-matcher@master
 
-    - run: echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
+    - run: pip3 install --user -r /opt/sdk/requirements.txt
+
     - run: cp sdkconfig.defaults sdkconfig
 
-    - name: build
-      uses: nsfilho/esp8266-rtos-sdk@v2
-      with:
-        makearg: "all"
+    - run: echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
+
+    - run: make all
