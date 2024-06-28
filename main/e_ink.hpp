@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "driver/gpio.h"
 #include "driver/spi.h"
 
@@ -75,13 +77,13 @@ private:
 	const gpio_num_t MOSI_PIN = GPIO_NUM_13;
 	const gpio_num_t CS_PIN   = GPIO_NUM_15;
 
-	constexpr static int screen_width  = 122;
-	constexpr static int screen_height = 250;
+	const int screen_width  = 122;
+	const int screen_height = 250;
 
-	constexpr static int buffer_width  = (screen_width%8 == 0)? (screen_width/8) : (screen_width/8+1);
-	constexpr static int buffer_height = screen_height;
+	const int buffer_width  = (screen_width%8 == 0)? (screen_width/8) : (screen_width/8+1);
+	const int buffer_height = screen_height;
 
-	uint8_t buffer[buffer_width][buffer_height];
+	std::vector<uint8_t> buffer = std::vector<uint8_t>(buffer_width*buffer_height, 0);
 
 	void init();
 	void init_gpio();
