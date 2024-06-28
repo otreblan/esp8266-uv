@@ -49,3 +49,4 @@ _deps
 *-prefix/
 
 build
+sdkconfig
