@@ -1,4 +1,5 @@
 #include <type_traits>
+#include <cmath>
 
 #include "e_ink.hpp"
 #include "utils.h"
@@ -32,7 +33,31 @@ void e_ink::init()
 	sw_reset();
 	busy_spinlock();
 
+	send_cmd(command::DRIVER_OUTPUT_CONTROL,     0xF9, 0x00, 0x00);
+	send_cmd(command::DATA_ENTRY_MODE_SETTING,   0x03);
+	send_cmd(command::SET_RAM_X_ADDRESS,         0x00, 0x0F);
+	send_cmd(command::SET_RAM_Y_ADDRESS,         0x00, 0x00, 0x00, 0xF9);
+	send_cmd(command::SET_RAM_X_ADDRESS_COUNTER, 0x00);
+	send_cmd(command::SET_RAM_Y_ADDRESS_COUNTER, 0x00, 0x00);
+	send_cmd(command::BORDER_WAVEFORM_CONTROL,   0x05);
+	send_cmd(command::DISPLAY_UPDATE_CONTROL_1,  0x00, 0x80);
 
+	send_cmd(command::TEMPERATURE_SENSOR_CONTROL, 0x80);
+	busy_spinlock();
+
+	send_cmd(command::WRITE_RAM_BW);
+	for(int j = 0; j < buffer_height; j++)
+	{
+		for(int i = 0; i < buffer_width; i++)
+		{
+			send_data(0xFF);
+		}
+	}
+	//send_cmd(command::NOP);
+
+	send_cmd(command::DISPLAY_UPDATE_CONTROL_2, 0xF7);
+	send_cmd(command::MASTER_ACTIVATION);
+	busy_spinlock();
 }
 
 void e_ink::init_gpio()
@@ -145,6 +170,7 @@ void e_ink::isr_busy_handler()
 
 e_ink::~e_ink()
 {
+	send_cmd(command::DEEP_SLEEP_MODE, 0x01);
 }
 
 bool e_ink::is_busy() const

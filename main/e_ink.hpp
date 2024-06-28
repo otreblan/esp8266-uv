@@ -75,6 +75,14 @@ private:
 	const gpio_num_t MOSI_PIN = GPIO_NUM_13;
 	const gpio_num_t CS_PIN   = GPIO_NUM_15;
 
+	constexpr static int screen_width  = 250;
+	constexpr static int screen_height = 122;
+
+	constexpr static int buffer_width  = (screen_width%8 == 0)? (screen_width/8) : (screen_width/8+1);
+	constexpr static int buffer_height = screen_height;
+
+	uint8_t buffer[buffer_width][buffer_height];
+
 	void init();
 	void init_gpio();
 	void init_spi();
