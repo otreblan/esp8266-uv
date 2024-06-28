@@ -87,8 +87,7 @@ private:
 	void init_gpio();
 	void init_spi();
 
-	void hw_reset();
-	void sw_reset();
+	void reset();
 	void busy_spinlock();
 
 
@@ -115,8 +114,8 @@ private:
 	static void isr_busy_handler(void* arg);
 	void isr_busy_handler();
 
-	spi_trans_t trans = {};
-	bool busy         = false;
+	spi_trans_t trans;
+	bool busy = false;
 
 public:
 	e_ink();
@@ -125,6 +124,57 @@ public:
 	~e_ink();
 
 	bool is_busy() const;
+
+	void driver_output_control();
+	void gate_driving_voltage_control();
+	void source_driving_voltage_control();
+	void initial_code_setting_otp_program();
+	void write_register_for_initial_code_setting();
+	void read_register_for_initial_code_setting();
+	void booster_soft_start_control();
+	void deep_sleep_mode();
+	void data_entry_mode_setting();
+	void sw_reset();
+	void hv_ready_detection();
+	void vci_detection();
+	void temperature_sensor_control();
+	void write_to_temperature_register();
+	void read_from_temperature_register();
+	void write_command_to_external_temperature_sensor();
+	void master_activation();
+	void display_update_control_1();
+	void display_update_control_2();
+	void write_ram_bw();
+	void write_ram_red();
+	void read_ram();
+	void vcom_sense();
+	void vcom_sense_duration();
+	void program_vcom_otp();
+	void write_register_for_vcom_control();
+	void write_vcom_register();
+	void otp_register_read_for_display_option();
+	void user_id_read();
+	void status_bit_read();
+	void program_ws_otp();
+	void load_ws_otp();
+	void write_lut_register();
+	void crc_calculation();
+	void crc_status_read();
+	void program_otp_selection();
+	void write_register_for_display_option();
+	void write_register_for_user_id();
+	void otp_program_mode();
+	void border_waveform_control();
+	void end_option();
+	void read_ram_option();
+	void set_ram_x_address();
+	void set_ram_y_address();
+	void auto_write_red_ram();
+	void auto_write_bw_ram();
+	void set_ram_x_address_counter();
+	void set_ram_y_address_counter();
+	void nop();
+
 };
 
 }

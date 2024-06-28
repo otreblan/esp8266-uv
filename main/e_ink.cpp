@@ -1,5 +1,6 @@
-#include <type_traits>
 #include <cmath>
+#include <cstring>
+#include <type_traits>
 
 #include "e_ink.hpp"
 #include "utils.h"
@@ -28,15 +29,12 @@ void e_ink::init()
 	init_gpio();
 	init_spi();
 
-	hw_reset();
-	busy_spinlock();
-	sw_reset();
-	busy_spinlock();
+	reset();
 
 	send_cmd(command::DRIVER_OUTPUT_CONTROL,     0xF9, 0x00, 0x00);
 	send_cmd(command::DATA_ENTRY_MODE_SETTING,   0x03);
 	send_cmd(command::SET_RAM_X_ADDRESS,         0x00, buffer_width-1);
-	send_cmd(command::SET_RAM_Y_ADDRESS,         0x00, 0x00, (buffer_height-1)>>8, (buffer_height-1));
+	send_cmd(command::SET_RAM_Y_ADDRESS,         0x00, 0x00, (buffer_height-1), (buffer_height-1)>>8);
 	send_cmd(command::SET_RAM_X_ADDRESS_COUNTER, 0x00);
 	send_cmd(command::SET_RAM_Y_ADDRESS_COUNTER, 0x00, 0x00);
 	send_cmd(command::BORDER_WAVEFORM_CONTROL,   0x05);
@@ -109,23 +107,25 @@ void e_ink::init_spi()
 
 	spi_init(HSPI_HOST, &spi_config);
 
+	memset(&trans, 0, sizeof(trans));
 	trans.bits.mosi = 8;
 }
 
-void e_ink::hw_reset()
+void e_ink::reset()
 {
+	// Hardware reset
 	gpio_set_level(RST_PIN, 1);
 	delay_ms(50);
 	gpio_set_level(RST_PIN, 0);
 	delay_ms(5);
 	gpio_set_level(RST_PIN, 1);
 	delay_ms(50);
-}
+	busy_spinlock();
 
-void e_ink::sw_reset()
-{
-	send_cmd(command::SW_RESET);
+	// Software reset
+	sw_reset();
 	delay_ms(10);
+	busy_spinlock();
 }
 
 void e_ink::busy_spinlock()
@@ -177,5 +177,203 @@ bool e_ink::is_busy() const
 {
 	return busy;
 }
+
+void e_ink::driver_output_control()
+{
+}
+
+void e_ink::gate_driving_voltage_control()
+{
+}
+
+void e_ink::source_driving_voltage_control()
+{
+}
+
+void e_ink::initial_code_setting_otp_program()
+{
+}
+
+void e_ink::write_register_for_initial_code_setting()
+{
+}
+
+void e_ink::read_register_for_initial_code_setting()
+{
+}
+
+void e_ink::booster_soft_start_control()
+{
+}
+
+void e_ink::deep_sleep_mode()
+{
+}
+
+void e_ink::data_entry_mode_setting()
+{
+}
+
+void e_ink::sw_reset()
+{
+	send_cmd(command::SW_RESET);
+}
+
+void e_ink::hv_ready_detection()
+{
+}
+
+void e_ink::vci_detection()
+{
+}
+
+void e_ink::temperature_sensor_control()
+{
+}
+
+void e_ink::write_to_temperature_register()
+{
+}
+
+void e_ink::read_from_temperature_register()
+{
+}
+
+void e_ink::write_command_to_external_temperature_sensor()
+{
+}
+
+void e_ink::master_activation()
+{
+}
+
+void e_ink::display_update_control_1()
+{
+}
+
+void e_ink::display_update_control_2()
+{
+}
+
+void e_ink::write_ram_bw()
+{
+}
+
+void e_ink::write_ram_red()
+{
+}
+
+void e_ink::read_ram()
+{
+}
+
+void e_ink::vcom_sense()
+{
+}
+
+void e_ink::vcom_sense_duration()
+{
+}
+
+void e_ink::program_vcom_otp()
+{
+}
+
+void e_ink::write_register_for_vcom_control()
+{
+}
+
+void e_ink::write_vcom_register()
+{
+}
+
+void e_ink::otp_register_read_for_display_option()
+{
+}
+
+void e_ink::user_id_read()
+{
+}
+
+void e_ink::status_bit_read()
+{
+}
+
+void e_ink::program_ws_otp()
+{
+}
+
+void e_ink::load_ws_otp()
+{
+}
+
+void e_ink::write_lut_register()
+{
+}
+
+void e_ink::crc_calculation()
+{
+}
+
+void e_ink::crc_status_read()
+{
+}
+
+void e_ink::program_otp_selection()
+{
+}
+
+void e_ink::write_register_for_display_option()
+{
+}
+
+void e_ink::write_register_for_user_id()
+{
+}
+
+void e_ink::otp_program_mode()
+{
+}
+
+void e_ink::border_waveform_control()
+{
+}
+
+void e_ink::end_option()
+{
+}
+
+void e_ink::read_ram_option()
+{
+}
+
+void e_ink::set_ram_x_address()
+{
+}
+
+void e_ink::set_ram_y_address()
+{
+}
+
+void e_ink::auto_write_red_ram()
+{
+}
+
+void e_ink::auto_write_bw_ram()
+{
+}
+
+void e_ink::set_ram_x_address_counter()
+{
+}
+
+void e_ink::set_ram_y_address_counter()
+{
+}
+
+void e_ink::nop()
+{
+}
+
 
 }
