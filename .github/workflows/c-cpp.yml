@@ -22,3 +22,8 @@ jobs:
     - run: echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
 
     - run: make all
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: build
+        path: build/
