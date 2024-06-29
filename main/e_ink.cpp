@@ -99,11 +99,12 @@ void e_ink::init_spi()
 	spi_config.interface.cs_en   = 0;
 	spi_config.interface.miso_en = 0;
 
-	spi_config.interface.cpol = SPI_CPOL_HIGH;
-	spi_config.interface.cpha = SPI_CPHA_HIGH;
+	// 2.13 V4 uses mode 0
+	spi_config.interface.cpol = SPI_CPOL_LOW;
+	spi_config.interface.cpha = SPI_CPHA_LOW;
 
-	spi_config.interface.byte_tx_order = SPI_BYTE_ORDER_MSB_FIRST;
-	spi_config.interface.bit_tx_order  = SPI_BIT_ORDER_LSB_FIRST;
+	spi_config.interface.byte_tx_order = SPI_BYTE_ORDER_LSB_FIRST;
+	spi_config.interface.bit_tx_order  = SPI_BIT_ORDER_MSB_FIRST;
 
 	spi_init(HSPI_HOST, &spi_config);
 
