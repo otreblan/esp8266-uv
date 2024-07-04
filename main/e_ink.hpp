@@ -4,6 +4,7 @@
 
 #include "driver/gpio.h"
 #include "driver/spi.h"
+#include "esp_attr.h"
 
 namespace uv
 {
@@ -95,18 +96,18 @@ private:
 	void init_spi();
 
 	void reset();
-	void busy_spinlock();
+	void IRAM_ATTR busy_spinlock();
 
 
 	template<class... Ts>
-	void send_cmd(command cmd, Ts... args)
+	void IRAM_ATTR send_cmd(command cmd, Ts... args)
 	{
 		send_cmd(cmd);
 		send_data(args...);
 	}
 
 	template<class... Ts>
-	void send_data(uint8_t data0, Ts... data)
+	void IRAM_ATTR send_data(uint8_t data0, Ts... data)
 	{
 		send_data(data0);
 		send_data(data...);
@@ -114,17 +115,16 @@ private:
 
 	// TODO: Read data from the screen with spi
 
-	void send_cmd(command cmd);
-	void send_data(uint8_t data);
-	void send_byte(uint8_t b);
-
-	static void isr_busy_handler(void* arg);
-	void isr_busy_handler();
+	void IRAM_ATTR send_cmd(command cmd);
+	void IRAM_ATTR send_data(uint8_t data);
+	void inline send_byte(uint8_t b);
 
 	spi_trans_t trans;
 	bool busy = false;
 
 public:
+	void inline isr_busy_handler();
+
 	e_ink();
 	e_ink(gpio_num_t BUSY_PIN, gpio_num_t RST_PIN, gpio_num_t DC_PIN, gpio_num_t SCK_PIN, gpio_num_t MOSI_PIN, gpio_num_t CS_PIN);
 
