@@ -68,7 +68,7 @@ void cpp_main()
 				UV_LOGI("Publish");
 
 				gpio_set_level(GPIO_LED, 1);
-				mqtt_client.publish("/hello_world", buffer.data(), offset, 0);
+				mqtt_client.publish("/uv_data", buffer.data(), offset, 0);
 				gpio_set_level(GPIO_LED, 0);
 
 				offset = snprintf(buffer.data(), buffer.size(), "%d\n", data);
