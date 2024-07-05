@@ -24,6 +24,7 @@ private:
 
 public:
 	mqtt_client(const std::string& broker_url);
+	mqtt_client(const std::string& broker_url, const std::string& user, const std::string& password);
 	mqtt_client(const std::string& host, uint32_t port);
 	~mqtt_client();
 

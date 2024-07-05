@@ -15,7 +15,7 @@ void mqtt_client::event_handler(esp_event_base_t base, int32_t event_id, esp_mqt
 {
 	UV_LOGI("Event dispatched from event loop base=%s, event_id=%d", base, event_id);
 
-	esp_mqtt_client_handle_t client = event->client;
+	//esp_mqtt_client_handle_t client = event->client;
 
 	switch(event->event_id)
 	{
@@ -61,10 +61,17 @@ void mqtt_client::event_handler(esp_event_base_t base, int32_t event_id, esp_mqt
 }
 
 mqtt_client::mqtt_client(const std::string& broker_url):
+	mqtt_client(broker_url, "", "")
+{
+}
+
+mqtt_client::mqtt_client(const std::string& broker_url, const std::string& user, const std::string& password):
 	event_group(xEventGroupCreate())
 {
 	esp_mqtt_client_config_t config = {
-		.uri       = broker_url.c_str()
+		.uri      = broker_url.c_str(),
+		.username = user.empty() ? nullptr : user.c_str(),
+		.password = password.empty() ? nullptr : password.c_str()
 	};
 
 	client = esp_mqtt_client_init(&config);
