@@ -69,9 +69,10 @@ mqtt_client::mqtt_client(const std::string& broker_url, const std::string& user,
 	event_group(xEventGroupCreate())
 {
 	esp_mqtt_client_config_t config = {
-		.uri      = broker_url.c_str(),
-		.username = user.empty() ? nullptr : user.c_str(),
-		.password = password.empty() ? nullptr : password.c_str()
+		.uri       = broker_url.c_str(),
+		.client_id = "ESP8266",
+		.username  = user.empty() ? nullptr : user.c_str(),
+		.password  = password.empty() ? nullptr : password.c_str()
 	};
 
 	client = esp_mqtt_client_init(&config);

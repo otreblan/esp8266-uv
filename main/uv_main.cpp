@@ -47,36 +47,24 @@ void cpp_main()
 	start_adc();
 
 	uv::wifi        wifi("", "");
-	uv::mqtt_client mqtt_client("mqtt://10.42.0.1:1883");
+	uv::mqtt_client mqtt_client("mqtt://backend.thinger.io:1883", "strobebug", "esp8266uv");
 	uv::e_ink       e_ink;
 
 	if(mqtt_client.start())
 	{
 		std::vector<char> buffer(4096);
-		size_t offset = 0;
 
 		while(true)
 		{
 			uint16_t data;
 			ESP_ERROR_CHECK(adc_read(&data));
 
-			size_t remaining_space = buffer.size()-offset;
-			int n = snprintf(buffer.data()+offset, remaining_space, "%d\n", data);
+			int n = snprintf(buffer.data(), buffer.size(), "{\"uv\":%d}\n", data);
 
-			if(n >= remaining_space)
-			{
-				UV_LOGI("Publish");
-
-				gpio_set_level(GPIO_LED, 1);
-				mqtt_client.publish("/uv_data", buffer.data(), offset, 0);
-				gpio_set_level(GPIO_LED, 0);
-
-				offset = snprintf(buffer.data(), buffer.size(), "%d\n", data);
-			}
-			else
-			{
-				offset += n;
-			}
+			gpio_set_level(GPIO_LED, 1);
+			mqtt_client.publish("/uv_data", buffer.data(), n, 0);
+			UV_LOGI("Publish: %s", buffer.data());
+			gpio_set_level(GPIO_LED, 0);
 		}
 	}
 }
