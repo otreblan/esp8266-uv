@@ -45,8 +45,7 @@ void cpp_main()
 
 		while(true)
 		{
-			// TODO: Find a way to print floats
-			int n = snprintf(buffer.data(), buffer.size(), "{\"uv_index\":%d}\n", (int)guva_s12sd.get_index());
+			int n = snprintf(buffer.data(), buffer.size(), "{\"uv_index\":%f}\n", guva_s12sd.get_index());
 
 			gpio_set_level(GPIO_LED, 1);
 			mqtt_client.publish("/uv_data", buffer.data(), n, 0);
